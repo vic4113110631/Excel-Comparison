@@ -1,4 +1,3 @@
-import org.apache.commons.collections4.iterators.PushbackIterator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -10,6 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class compare {
     public enum  EDU_Field{
@@ -49,25 +51,43 @@ public class compare {
             if (rows_edu.hasNext())
                 rows_edu.next();
 
+            // To control Rows education Loop
+            Row previous_row = null;
+            Boolean isNewLoop = FALSE;
+
             while (rows_en.hasNext()) {
                 Row row_en = rows_en.next();
                 // get source ID from AH_RP.xls and compare to education sheet
                 // default source ID from AH_RP.xls is string, so convert it to integer
                 Integer SOURCEID_EN = Integer.parseInt(row_en.getCell(RP_Field.SOURCEID.ordinal()).getStringCellValue());
 
+                Row row_edu = null;
                 while (rows_edu.hasNext()){
-                    Row row_edu = rows_edu.next();
-
+                    if(isNewLoop.equals(TRUE)) {
+                        row_edu = previous_row;
+                        isNewLoop = FALSE;
+                    }else{
+                        row_edu = rows_edu.next();
+                    }
                     // source ID and language are also string type, so convert them to integer
                     Integer SOURCEID_EDU = Integer.parseInt(row_edu.getCell(EDU_Field.SOURCEID.ordinal()).getStringCellValue());
                     Integer language = Integer.parseInt(row_edu.getCell(EDU_Field.LANGUAGES.ordinal()).getStringCellValue());
 
-                    if(SOURCEID_EN.equals(SOURCEID_EDU) && language.equals(2)) {
-                        System.out.println("correct" + SOURCEID_EDU);
+                    if(SOURCEID_EN.equals(SOURCEID_EDU)) {
+                        if(language.equals(2)) {
+                            System.out.println("correct" + SOURCEID_EDU);
+                        }else{ // some ID but language is not correct, do while
+                            continue;
+                        }
                     }else{
-
-                        break;
-                    }
+                        if(SOURCEID_EN > SOURCEID_EDU) {
+                            continue;
+                        }else{
+                            previous_row = row_edu;
+                            isNewLoop = TRUE;
+                            break;
+                        }
+                    } 
                 } // end while for education
 
             } // end while for entites
