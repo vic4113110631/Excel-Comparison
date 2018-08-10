@@ -1,7 +1,6 @@
+import org.apache.commons.collections4.iterators.PushbackIterator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,6 +13,7 @@ import java.util.Iterator;
 
 public class compare {
     public enum  EDU_Field{
+        TED_ID,
         SOURCEID,
         LANGUAGES,
         SCHOOL_NAME,
@@ -39,22 +39,38 @@ public class compare {
 
             HSSFSheet entites = RP.getSheet("main_entities");
             XSSFSheet educations = EDU.getSheet("education");
-            Iterator<Row> rows = entites.iterator();
 
-            while (rows.hasNext()) {
-                Row row = rows.next();
+            Iterator<Row> rows_en = entites.iterator();
+            Iterator<Row> rows_edu = educations.iterator();
 
-                Iterator<Cell> cells = row.iterator();
-                while (cells.hasNext()) {
-                    Cell cell = cells.next();
-                    if (cell.getCellTypeEnum() == CellType.STRING) {
-                        System.out.print(cell.getStringCellValue() + "--");
-                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-                        System.out.print(cell.getNumericCellValue() + "--");
+            // Skip first entry
+            if (rows_en.hasNext())
+                rows_en.next();
+            if (rows_edu.hasNext())
+                rows_edu.next();
+
+            while (rows_en.hasNext()) {
+                Row row_en = rows_en.next();
+                // get source ID from AH_RP.xls and compare to education sheet
+                // default source ID from AH_RP.xls is string, so convert it to integer
+                Integer SOURCEID_EN = Integer.parseInt(row_en.getCell(RP_Field.SOURCEID.ordinal()).getStringCellValue());
+
+                while (rows_edu.hasNext()){
+                    Row row_edu = rows_edu.next();
+
+                    // source ID and language are also string type, so convert them to integer
+                    Integer SOURCEID_EDU = Integer.parseInt(row_edu.getCell(EDU_Field.SOURCEID.ordinal()).getStringCellValue());
+                    Integer language = Integer.parseInt(row_edu.getCell(EDU_Field.LANGUAGES.ordinal()).getStringCellValue());
+
+                    if(SOURCEID_EN.equals(SOURCEID_EDU) && language.equals(2)) {
+                        System.out.println("correct" + SOURCEID_EDU);
+                    }else{
+
+                        break;
                     }
-                }
-                System.out.println();
-            }
+                } // end while for education
+
+            } // end while for entites
 
 
         } catch (FileNotFoundException e) {
