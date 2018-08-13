@@ -57,7 +57,7 @@ public class compare {
         System.out.println(String.format("%.1f MB", (memory / (1024.0 * 1024.0))));
     }
 
-    public static void readFile(String FILE_PATH_1, String FILE_PATH_2){
+    private static void readFile(String FILE_PATH_1, String FILE_PATH_2){
         try {
             InputStream FILE_1 = new FileInputStream(FILE_PATH_1);
             InputStream FILE_2 = new FileInputStream(FILE_PATH_2);
@@ -141,26 +141,26 @@ public class compare {
                             row_nested.createCell(4).setCellValue(row_en.getCell(2).getStringCellValue());
                             row_nested.createCell(5).setCellValue(row_edu.getCell(0).getStringCellValue());
                             row_nested.createCell(6).setCellValue("1");
-                            System.out.print(SOURCEID_EDU);
-                            if(row_edu.getCell(3) == null){
-                                System.out.print("-- Major");
+
+                            if(row_edu.getCell(3) != null){
+                                row_nested.createCell(7).setCellValue(row_edu.getCell(3).getStringCellValue());
                             }
-                            if(row_edu.getCell(6) == null){
-                                System.out.print("-- Major");
+                            if(row_edu.getCell(6) != null){
+                                row_nested.createCell(8).setCellValue(row_edu.getCell(6).getStringCellValue());
                             }
-                            if(row_edu.getCell(7) == null){
-                                System.out.print("-- Degree");
+                            if(row_edu.getCell(7) != null){
+                                row_nested.createCell(9).setCellValue(row_edu.getCell(7).getStringCellValue());
                             }
-                            if(row_edu.getCell(8) == null){
-                                System.out.print("-- Start");
+                            if(row_edu.getCell(8) != null){
+                                row_nested.createCell(10).setCellValue(row_edu.getCell(8).getStringCellValue());
                             }
-                            if(row_edu.getCell(9) == null){
-                                System.out.print("-- End");
+                            if(row_edu.getCell(9) != null){
+                                row_nested.createCell(11).setCellValue(row_edu.getCell(9).getStringCellValue());
                             }
-                            if(row_edu.getCell(4) == null){
-                                System.out.print("-- City");
+                            if(row_edu.getCell(4) != null){
+                                row_nested.createCell(12).setCellValue(row_edu.getCell(4).getStringCellValue());
                             }
-                            System.out.println();
+
                         }else{ // some ID but language is not correct, do while
                             continue;
                         }
