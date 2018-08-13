@@ -11,6 +11,8 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 public class EXP {
+    private RESULT[] result_field = RESULT.values();
+
     public enum RP_Field{
         CRISID,
         UUID,
@@ -59,10 +61,11 @@ public class EXP {
     }
 
     public static void main(String[] args) {
-        readFile("src/AH_RP.xls", "src/AH_EXP.xlsx");
+        EXP exp = new EXP();
+        exp.readFile("src/AH_RP.xls", "src/AH_EXP.xlsx");
     }
 
-    private static void readFile(String FILE_PATH_1, String FILE_PATH_2) {
+    private void readFile(String FILE_PATH_1, String FILE_PATH_2) {
         try {
             InputStream FILE_1 = new FileInputStream(FILE_PATH_1);
             InputStream FILE_2 = new FileInputStream(FILE_PATH_2);
@@ -121,7 +124,6 @@ public class EXP {
 
                     if(SOURCEID_EN.equals(SOURCEID_EXP)) {
                       if(language.equals(2)){
-                          System.out.println("correct:" + SOURCEID_EXP);
 
                           // If previous SOURCEID is not some to now SOURCEID, write into main sheet
                           int index_main = sheet_main.getLastRowNum(); // Get current number of Rows
@@ -133,6 +135,17 @@ public class EXP {
                               previousID = Integer.parseInt(row_main.getCell(RP_Field.SOURCEID.ordinal()).getStringCellValue());
                           }
 
+                          String current = "Y";
+                          if(row_exp.getCell(EXP_Field.current.ordinal()) != null)
+                              current = row_exp.getCell(EXP_Field.current.ordinal()).getStringCellValue();
+
+                          if(current.equals("Y")){
+                              this.write_current(sheet_nested, row_exp);
+                          }else{ // "N"
+                              this.write_exp(sheet_nested, row_exp);
+                          }
+
+                          this.write_common(sheet_nested, row_en, row_exp);
                       }
                     }else{
                         if(SOURCEID_EN <= SOURCEID_EXP) {
@@ -154,5 +167,57 @@ public class EXP {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void write_common(Sheet sheet_nested, Row row_en, Row row_exp) {
+        int index = sheet_nested.getLastRowNum();
+        Row row_nested = sheet_nested.getRow(index);
+
+        row_nested.createCell(0).setCellValue(row_en.getCell(0).getStringCellValue());  // CRISID_PARENT
+        row_nested.createCell(1).setCellValue(row_en.getCell(2).getStringCellValue());  // SOURCEREF_PARENT
+        row_nested.createCell(2).setCellValue(row_en.getCell(3).getStringCellValue());  // SOURCEID_PARENT
+        row_nested.createCell(4).setCellValue(row_en.getCell(2).getStringCellValue());  // SOURCEREF
+        row_nested.createCell(5).setCellValue(row_exp.getCell(EXP_Field.tex_id.ordinal()).getStringCellValue());    // SOURCEID
+    }
+
+    private void write_exp(Sheet sheet_nested, Row row_exp) {
+        int index = sheet_nested.getLastRowNum();
+        Row row_nested = sheet_nested.createRow(index + 1);
+        
+        for (int i = 0; i < 7; i++) {
+            if(row_exp.getCell(this.result_field[i].getValue()) != null)
+                row_nested.createCell(i + 14).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+        }
+    }
+
+    private void write_current(Sheet sheet_nested, Row row_exp) {
+        int index = sheet_nested.getLastRowNum();
+        Row row_nested = sheet_nested.createRow(index + 1);
+        
+        for (int i = 0; i < 7; i++) {
+            if(row_exp.getCell(this.result_field[i].getValue()) != null)
+                row_nested.createCell(i + 6).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+        }
+    }
+}
+
+enum  RESULT{
+    employer (3),
+    department (6),
+    position_title (7),
+    period_start (8),
+    period_end (9),
+    city (5),
+    country (6),
+    torder (12);
+
+    private int value;
+
+    private RESULT(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return this.value;
     }
 }
