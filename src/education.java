@@ -1,6 +1,5 @@
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -13,7 +12,7 @@ import java.util.Iterator;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-public class compare {
+public class education {
     public enum  EDU_Field{
         TED_ID,
         SOURCEID,
@@ -38,7 +37,7 @@ public class compare {
         SOURCEREF_PARENT,
         SOURCEID_PARENT,
         UUID,
-        OURCEREF,
+        SOURCEREF,
         SOURCEID,
         eduno,
         eduschool,
@@ -135,30 +134,33 @@ public class compare {
                             int index_nested = sheet_nested.getLastRowNum(); // Get current of Rows
                             row_nested = sheet_nested.createRow(index_nested + 1);
 
-                            row_nested.createCell(0).setCellValue(row_en.getCell(0).getStringCellValue());
-                            row_nested.createCell(1).setCellValue(row_en.getCell(2).getStringCellValue());
-                            row_nested.createCell(2).setCellValue(row_en.getCell(3).getStringCellValue());
-                            row_nested.createCell(4).setCellValue(row_en.getCell(2).getStringCellValue());
-                            row_nested.createCell(5).setCellValue(row_edu.getCell(0).getStringCellValue());
+                            row_nested.createCell(0).setCellValue(row_en.getCell(0).getStringCellValue());  //
+                            row_nested.createCell(1).setCellValue(row_en.getCell(2).getStringCellValue());  // SOURCEREF_PARENT
+                            row_nested.createCell(2).setCellValue(row_en.getCell(3).getStringCellValue()); // SOURCEID
+                            row_nested.createCell(4).setCellValue(row_en.getCell(2).getStringCellValue()); // SOURCERECH
+                            row_nested.createCell(5).setCellValue(row_edu.getCell(0).getStringCellValue()); // SOURCE
                             row_nested.createCell(6).setCellValue("1");
 
-                            if(row_edu.getCell(3) != null){
+                            if(row_edu.getCell(3) != null){ // School Name
                                 row_nested.createCell(7).setCellValue(row_edu.getCell(3).getStringCellValue());
                             }
-                            if(row_edu.getCell(6) != null){
+                            if(row_edu.getCell(6) != null){ // Major
                                 row_nested.createCell(8).setCellValue(row_edu.getCell(6).getStringCellValue());
                             }
-                            if(row_edu.getCell(7) != null){
+                            if(row_edu.getCell(7) != null){ // Degree
                                 row_nested.createCell(9).setCellValue(row_edu.getCell(7).getStringCellValue());
                             }
-                            if(row_edu.getCell(8) != null){
+                            if(row_edu.getCell(8) != null){ // Start
                                 row_nested.createCell(10).setCellValue(row_edu.getCell(8).getStringCellValue());
                             }
-                            if(row_edu.getCell(9) != null){
+                            if(row_edu.getCell(9) != null){  // End
                                 row_nested.createCell(11).setCellValue(row_edu.getCell(9).getStringCellValue());
                             }
-                            if(row_edu.getCell(4) != null){
+                            if(row_edu.getCell(4) != null){  // City
                                 row_nested.createCell(12).setCellValue(row_edu.getCell(4).getStringCellValue());
+                            }
+                            if(row_edu.getCell(5) != null){  // Country
+                                row_nested.createCell(13).setCellValue(row_edu.getCell(5).getStringCellValue());
                             }
 
                         }else{ // some ID but language is not correct, do while
