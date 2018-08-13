@@ -185,9 +185,13 @@ public class EXP {
         Row row_nested = sheet_nested.createRow(index + 1);
         
         for (int i = 0; i < 7; i++) {
-            if(row_exp.getCell(this.result_field[i].getValue()) != null)
-                row_nested.createCell(i + 14).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+            if(row_exp.getCell(this.result_field[i].getValue()) != null) {
+                if(!row_exp.getCell(this.result_field[i].getValue()).getStringCellValue().equals("\\N"))
+                    row_nested.createCell(i + 14).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+            }
         }
+        if(row_exp.getCell(this.result_field[7].getValue()) != null)
+            row_nested.createCell(21).setCellValue(row_exp.getCell(this.result_field[7].getValue()).getNumericCellValue());
     }
 
     private void write_current(Sheet sheet_nested, Row row_exp) {
@@ -195,9 +199,14 @@ public class EXP {
         Row row_nested = sheet_nested.createRow(index + 1);
         
         for (int i = 0; i < 7; i++) {
-            if(row_exp.getCell(this.result_field[i].getValue()) != null)
-                row_nested.createCell(i + 6).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+            if(row_exp.getCell(this.result_field[i].getValue()) != null) {
+                if(!row_exp.getCell(this.result_field[i].getValue()).getStringCellValue().equals("\\N"))
+                    row_nested.createCell(i + 6).setCellValue(row_exp.getCell(this.result_field[i].getValue()).getStringCellValue());
+            }
         }
+        // torder field
+        if(row_exp.getCell(this.result_field[7].getValue()) != null)
+            row_nested.createCell(13).setCellValue(row_exp.getCell(this.result_field[7].getValue()).getNumericCellValue());
     }
 }
 
@@ -207,9 +216,9 @@ enum  RESULT{
     position_title (7),
     period_start (8),
     period_end (9),
-    city (5),
-    country (6),
-    torder (12);
+    city (4),
+    country (5),
+    torder (11);
 
     private int value;
 
