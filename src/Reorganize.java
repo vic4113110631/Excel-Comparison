@@ -26,13 +26,16 @@ public class Reorganize {
                 concatBrokenRow(row, next);
 
                 remove.add(next.getRowNum());
+                System.out.println( "--" + next.getRowNum());
             }
 
         } // end while
 
         // Delete redundant rows
+        int shift = 0; // row number will change after deleting, so using a variable to control
         for (Integer i: remove) {
-            sheet.shiftRows(i +1, sheet.getLastRowNum() + 1 , -1);
+            sheet.shiftRows(i + 1 + shift ,sheet.getLastRowNum(), -1);
+            shift--;
         }
 
         return sheet;
@@ -50,7 +53,7 @@ public class Reorganize {
 
         Iterator<Cell> cells = next.cellIterator();
         cells.next();   // Skip first column that just be contacted
-
+        
         // contact two rows
         while (cells.hasNext()){
             Cell cell = cells.next();
@@ -59,9 +62,8 @@ public class Reorganize {
             row.createCell(numberOfColumns++).setCellValue(cell.getStringCellValue());
         }
 
-        System.out.println(row.getCell(0).getStringCellValue());
-
-
+        System.out.print(row.getCell(0).getStringCellValue()+"--");
+        System.out.print(row.getCell(EXP_Field.torder.ordinal()));
     }
 
     private void removeBackSlash(Row row) {
