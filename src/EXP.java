@@ -20,21 +20,6 @@ public class EXP {
         SOURCEID
     }
 
-    public enum EXP_Field{
-        tex_id,
-        tid,
-        languages,
-        employer,
-        city,
-        country,
-        department,
-        position_title,
-        period_start,
-        period_end,
-        current,
-        torder
-    }
-
     public enum NESTED{
         CRISID_PARENT,
         SOURCEREF_PARENT,
@@ -229,4 +214,19 @@ enum  RESULT{
     public int getValue() {
         return this.value;
     }
+}
+
+enum EXP_Field{
+    tex_id,
+    tid,
+    languages,
+    employer,
+    city,
+    country,
+    department,
+    position_title,
+    period_start,
+    period_end,
+    current,
+    torder
 }
