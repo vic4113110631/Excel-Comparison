@@ -25,8 +25,8 @@ public class Reorganize {
                 removeBackSlash(row);
                 concatBrokenRow(row, next);
 
+                // add index of row that wait to be removed
                 remove.add(next.getRowNum());
-                System.out.println( "--" + next.getRowNum());
             }
 
         } // end while
@@ -51,19 +51,17 @@ public class Reorganize {
         // contact two string
         last.setCellValue(last.getStringCellValue().concat(" " + broken.getStringCellValue()));
 
-        Iterator<Cell> cells = next.cellIterator();
-        cells.next();   // Skip first column that just be contacted
-        
         // contact two rows
-        while (cells.hasNext()){
-            Cell cell = cells.next();
+        for (int i = 1; i < next.getLastCellNum(); i++){
+            Cell cell = row.createCell(numberOfColumns++);
 
-
-            row.createCell(numberOfColumns++).setCellValue(cell.getStringCellValue());
+            if (next.getCell(i) != null)
+                cell.setCellValue(next.getCell(i).getStringCellValue());
         }
 
-        System.out.print(row.getCell(0).getStringCellValue()+"--");
-        System.out.print(row.getCell(EXP_Field.torder.ordinal()));
+        // Convert type of torder to double
+        double torder = Double.parseDouble(row.getCell(EXP_Field.torder.ordinal()).getStringCellValue());
+        row.getCell(EXP_Field.torder.ordinal()).setCellValue(torder);
     }
 
     private void removeBackSlash(Row row) {
