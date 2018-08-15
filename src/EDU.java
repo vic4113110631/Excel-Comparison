@@ -1,8 +1,6 @@
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,6 +11,8 @@ import java.util.Iterator;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.RETURN_BLANK_AS_NULL;
+
 
 public class EDU {
 
@@ -70,6 +70,7 @@ public class EDU {
 
                 Row row_edu = null;
                 short torder = 1;
+
                 while (rows_edu.hasNext()){
                     if(isNewLoop.equals(TRUE)) {
                         row_edu = previous_row;
@@ -83,6 +84,11 @@ public class EDU {
 
                     if(SOURCEID_EN.equals(SOURCEID_EDU)) {
                         if(language.equals(2)) { // Correct row
+
+                            // When school_name, major and degree are empty, it is invalid data.
+                            // Pass this loop
+                            if(!isValid(row_edu))
+                                continue;
 
                             // If previous SOURCEID is not some to now SOURCEID, write into main sheet
                             if(!previousID.equals(SOURCEID_EN)) {
@@ -119,17 +125,27 @@ public class EDU {
                     }
                 } // end while for education
 
-            } // end while for entites
+            } // end while for entities
 
             FileOutputStream out = new FileOutputStream("result.xls");
             result.write(out);
             out.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean isValid(Row row_edu) {
+        Cell degree = row_edu.getCell(EDU_Field.DEGREE.ordinal(), RETURN_BLANK_AS_NULL);
+        Cell school = row_edu.getCell(EDU_Field.SCHOOL_NAME.ordinal(), RETURN_BLANK_AS_NULL);
+        Cell major = row_edu.getCell(EDU_Field.MAJOR.ordinal(), RETURN_BLANK_AS_NULL);
+
+        if(degree == null && school == null && major == null) {
+            System.out.println("invalid data - ted_id :" + row_edu.getCell(EDU_Field.TED_ID.ordinal()).getStringCellValue());
+            return FALSE;
+        }
+        return TRUE;
     }
 
     private static void setMainSheet(Sheet sheet_main, Row row_en) {
@@ -155,10 +171,14 @@ public class EDU {
 
         if(row_edu.getCell(8) != null){ // Start
             String date = convertDate(row_edu.getCell(8).getStringCellValue());
+            // If date is default, write empty value in cell.
+            if (date.equals("31-12-1899"))
+                date = "";
             row_nested.createCell(10).setCellValue(date);
         }
         if(row_edu.getCell(9) != null){  // End
-            row_nested.createCell(11).setCellValue(row_edu.getCell(9).getStringCellValue());
+            String date = convertDate(row_edu.getCell(9).getStringCellValue());
+            row_nested.createCell(11).setCellValue(date);
         }
 
         if(row_edu.getCell(4) != null){  // City
