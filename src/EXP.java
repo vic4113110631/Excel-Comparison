@@ -47,7 +47,7 @@ public class EXP {
 
     public static void main(String[] args) {
         EXP exp = new EXP();
-        exp.readFile("src/AH_RP.xls", "src/AH_EXP.xlsx");
+        exp.readFile("src/AH_RP.xls", "src/AH_EXP_reorganize.xlsx");
     }
 
     private void readFile(String FILE_PATH_1, String FILE_PATH_2) {
