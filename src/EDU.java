@@ -16,11 +16,33 @@ import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.RETURN_BLANK_AS_
 
 public class EDU {
 
-    public static void showMemoryUsage()
-    {
-        long memory = Runtime.getRuntime().totalMemory()
-                - Runtime.getRuntime().freeMemory();
-        System.out.println(String.format("%.1f MB", (memory / (1024.0 * 1024.0))));
+    private enum  EDU_Field{
+        TED_ID,
+        SOURCEID,
+        LANGUAGES,
+        SCHOOL_NAME,
+        CITY,
+        COUNTRY,
+        MAJOR,
+        DEGREE,
+        PERIOD_START,
+    }
+
+    enum NESTED{
+        CRISID_PARENT,
+        SOURCEREF_PARENT,
+        SOURCEID_PARENT,
+        UUID,
+        SOURCEREF,
+        SOURCEID,
+        eduno,
+        eduschool,
+        edumajor,
+        edudegree,
+        edustart,
+        eduend,
+        educity,
+        educountry;
     }
 
     private static void readFile(String FILE_PATH_1, String FILE_PATH_2){
@@ -148,7 +170,7 @@ public class EDU {
         return TRUE;
     }
 
-    private static void setMainSheet(Sheet sheet_main, Row row_en) {
+    static void setMainSheet(Sheet sheet_main, Row row_en) {
         int index_main = sheet_main.getLastRowNum(); // Get current number of Rows
         Row row = sheet_main.createRow(index_main + 1);
 
@@ -189,7 +211,7 @@ public class EDU {
         }
     }
 
-    private static String convertDate(String date) {
+    static String convertDate(String date) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -206,18 +228,6 @@ public class EDU {
     }
 }
 
-enum  EDU_Field{
-    TED_ID,
-    SOURCEID,
-    LANGUAGES,
-    SCHOOL_NAME,
-    CITY,
-    COUNTRY,
-    MAJOR,
-    DEGREE,
-    PERIOD_START,
-}
-
 enum RP_Field{
     CRISID,
     UUID,
@@ -231,21 +241,4 @@ enum MAIN_Field{
     UUID,
     SOURCEREF,
     SOURCEID
-}
-
-enum NESTED{
-    CRISID_PARENT,
-    SOURCEREF_PARENT,
-    SOURCEID_PARENT,
-    UUID,
-    SOURCEREF,
-    SOURCEID,
-    eduno,
-    eduschool,
-    edumajor,
-    edudegree,
-    edustart,
-    eduend,
-    educity,
-    educountry;
 }
