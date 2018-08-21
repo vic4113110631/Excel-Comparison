@@ -1,6 +1,5 @@
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -212,11 +211,11 @@ public class position {
 
         if (row.getCell(orderOfDept) == null){
             Cell cell = row.createCell(orderOfDept);
-            cell.setCellValue("[" + dept.getCRISID() + "]" + dept.getName());
+            cell.setCellValue("[CRISID=" + dept.getCRISID() + "]" + dept.getName());
         }else{
             Cell cell = row.getCell(orderOfDept);
             String orig_dept = cell.getStringCellValue();
-            String new_dept = "[" + dept.getCRISID() + "]" + dept.getName();
+            String new_dept = "[CRISID=" + dept.getCRISID() + "]" + dept.getName();
 
             if(!orig_dept.contains(new_dept))
                 cell.setCellValue(new_dept + "|||" + orig_dept);
@@ -230,7 +229,7 @@ public class position {
         String CRISID_PARENT = row_en.getCell(RP_Field.CRISID.ordinal()).getStringCellValue();
         String SOURCEID_PARENT = row_en.getCell(RP_Field.SOURCEID.ordinal()).getStringCellValue();
         String SOURCEID = row_dept.getCell(DEPT_Field.tdid.getValue()).getStringCellValue();
-        String mainunit = "[" + dept.getCRISID() + "]" + dept.getName();
+        String mainunit = "[CRISID=" + dept.getCRISID() + "]" + dept.getName();
 
         String [] nested = {CRISID_PARENT, "AH", SOURCEID_PARENT, "", "AH", SOURCEID, mainunit, title};
 
@@ -238,7 +237,7 @@ public class position {
             row.createCell(i).setCellValue(nested[i]);
     }
 
-    private void setFirstRow(Sheet sheet, String [] fields) {
+    public static void setFirstRow(Sheet sheet, String[] fields) {
         Row row_main = sheet.createRow(0);
         for (int i = 0; i < fields.length; i++)
             row_main.createCell(i).setCellValue(fields[i]);
